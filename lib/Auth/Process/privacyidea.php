@@ -164,6 +164,11 @@ class sspmod_privacyidea_Auth_Process_privacyidea extends SimpleSAML_Auth_Proces
                 return False;
             } else {
 	            SimpleSAML_Logger::debug("privacyIDEA: User authenticated successfully");
+	            if(isset($body->detail)) {
+	            	$detail = $body->detail;
+	            	$tokenType = $detail->type;
+	            	$state['privacyidea:privacyidea:tokenType'] = $tokenType;
+	            }
                 return True;
             }
         }
