@@ -45,7 +45,7 @@ class sspmod_privacyidea_Auth_utils {
 		} elseif ($http_method === "GET") {
 			$params_str = '?';
 			foreach ($params as $key => $value) {
-				$params_str .=$key . "=" . $value . "&";
+				$params_str .=$key . "=" . urlencode($value) . "&";
 			}
 			curl_setopt($curl_instance, CURLOPT_URL, $url . $params_str);
 		}
