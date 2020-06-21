@@ -91,10 +91,11 @@ class sspmod_privacyidea_Auth_Process_tokenEnrollment extends SimpleSAML_Auth_Pr
 	public function enrollToken (&$state) {
 
 		$params        = array(
-			"user" => $state["Attributes"][$this->serverconfig['uidKey']][0],
+			"user" => preg_replace('/@' . $this->serverconfig['realm']. '$/', '', $state["Attributes"][$this->serverconfig['uidKey']][0]),
 			"genkey" => 1,
 			"type" => $this->serverconfig['tokenType'],
 			"description" => "Enrolled with simpleSAMLphp",
+                        "realm" =>  $this->serverconfig['realm'],
 		);
 		$headers = array(
 			"authorization: " . $this->auth_token,
