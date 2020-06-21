@@ -124,7 +124,27 @@ class sspmod_privacyidea_Auth_Process_tokenEnrollment extends SimpleSAML_Auth_Pr
 		if ($count == 0) {
 			return false;
 		} else {
-			return true;
+		    foreach ($result->tokens as $token) {
+		        if (property_exists($token->info ,'count_auth_success')) {
+		            // User successfully validated that they scanned the QR code
+                    SimpleSAML_Logger::debug('user '. $token->username . ' has active token ' . $token->serial);
+                    return true;
+                } else {
+                    SimpleSAML_Logger::info('user '. $token->username . ' has inactive token ' . $token->serial . '. Deleting');
+                    $this->removeUnactivatedTokens($token->serial);
+                }
+            }
+			return false;
 		}
 	}
+
+	private function removeUnactivatedTokens(string $tokenSerial) {
+        $headers = array(
+            "authorization: " . $this->auth_token,
+        );
+
+        //TODO: evaluate the return results
+        sspmod_privacyidea_Auth_utils::curl([], $headers, $this->serverconfig, "/token/" . $tokenSerial, "DELETE");
+
+    }
 }
