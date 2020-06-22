@@ -42,11 +42,14 @@ class sspmod_privacyidea_Auth_utils {
 		if ($http_method === "POST") {
 			curl_setopt($curl_instance, CURLOPT_POST, 3);
 			curl_setopt($curl_instance, CURLOPT_POSTFIELDS, $params);
-		} elseif ($http_method === "GET") {
+		} else {
 			$params_str = '?';
 			foreach ($params as $key => $value) {
 				$params_str .=$key . "=" . urlencode($value) . "&";
 			}
+                        if ($http_method === 'DELETE') {
+                            curl_setopt($curl_instance, CURLOPT_CUSTOMREQUEST, "DELETE");
+                        }
 			curl_setopt($curl_instance, CURLOPT_URL, $url . $params_str);
 		}
 		if ($serverconfig['sslverifyhost']) {
