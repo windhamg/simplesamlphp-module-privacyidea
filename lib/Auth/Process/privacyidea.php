@@ -1,4 +1,7 @@
 <?php
+
+use CirrusIdentity\SSP\Utils\MetricLogger;
+
 /**
  * This authentication processing filter allows you to add a second step
  * authentication against privacyIDEA
@@ -201,6 +204,14 @@ class sspmod_privacyidea_Auth_Process_privacyidea extends SimpleSAML_Auth_Proces
 		    throw new SimpleSAML_Error_BadRequest("privacyIDEA: Valid JSON response, but some internal error occured in PI server");
 	    }
 	    if ( $auth !== true ) {
+            MetricLogger::getInstance()->logMetric(
+                'mfa',
+                'authenticationFailure',
+                [
+                    'user' => $params['user'],
+                    'realm' => $params['realm'],
+                ]
+            );
 		    SimpleSAML_Logger::debug( "Throwing WRONGUSERPASS" );
 		    if (property_exists($body, "detail")) {
 				$detail = $body->detail;
@@ -222,7 +233,14 @@ class sspmod_privacyidea_Auth_Process_privacyidea extends SimpleSAML_Auth_Proces
 				throw new SimpleSAML_Error_Error("WRONGUSERPASS");
 			}
 		}
-
+        MetricLogger::getInstance()->logMetric(
+            'mfa',
+            'authenticationSuccess',
+            [
+                'user' => $params['user'],
+                'realm' => $params['realm'],
+            ]
+        );
 	    SimpleSAML_Logger::debug( "privacyIDEA: User authenticated successfully" );
 	    return true;
     }

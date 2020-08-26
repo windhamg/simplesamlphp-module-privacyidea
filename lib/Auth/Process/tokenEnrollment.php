@@ -1,4 +1,7 @@
 <?php
+
+use CirrusIdentity\SSP\Utils\MetricLogger;
+
 /**
  * If a user does not have a token, a new one could be enrolled.
  * This one will be generated with a QR-code, which can be scanned with a mobile device.
@@ -84,6 +87,14 @@ class sspmod_privacyidea_Auth_Process_tokenEnrollment extends SimpleSAML_Auth_Pr
 						throw new SimpleSAML_Error_BadRequest("privacyIDEA: We were not able to read the response from the PI server");
 					}
 				}
+                MetricLogger::getInstance()->logMetric(
+                    'mfa',
+                    'createToken',
+                    [
+                        'user' => $state["Attributes"][$this->serverconfig['uidKey']][0],
+                        'realm' => $this->serverconfig['realm'],
+                    ]
+                );
 			}
 		}
 	}
@@ -131,6 +142,14 @@ class sspmod_privacyidea_Auth_Process_tokenEnrollment extends SimpleSAML_Auth_Pr
                             SimpleSAML_Logger::debug('user '. $token->username . ' has active token ' . $token->serial);
                             $hasValidToken = true;
                         } else {
+                    MetricLogger::getInstance()->logMetric(
+                        'mfa',
+                        'deleteInactiveToken',
+                        [
+                            'user' => $token->username,
+                            'tokenSerial' => $token->serial,
+                        ]
+                    );
                             SimpleSAML_Logger::info('user '. $token->username . ' has inactive token ' . $token->serial . '. Deleting');
                             $this->removeUnactivatedTokens($token->serial);
                         }

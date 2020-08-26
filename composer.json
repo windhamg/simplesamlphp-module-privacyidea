@@ -3,6 +3,13 @@
     "description": "Add two factor authentication like OTP to simpleSAMLphp. The second factor is managed in privacyIDEA.",
     "type": "simplesamlphp-module",
     "require": {
-        "simplesamlphp/composer-module-installer": "~1.0"
+        "simplesamlphp/composer-module-installer": "~1.0",
+        "cirrusidentity/simplesamlphp-internal-utils": "dev-master"
+    },
+    "repositories": {
+            "cirrus-cirrusinternal": {
+            "type": "git",
+            "url": "git@bitbucket.org:cirrusidentity/simplesaml-internal-utils.git"
+        }
     }
 }
