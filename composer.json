@@ -4,7 +4,7 @@
     "type": "simplesamlphp-module",
     "require": {
         "simplesamlphp/composer-module-installer": "~1.0",
-        "cirrusidentity/simplesamlphp-internal-utils": "dev-master"
+        "cirrusidentity/simplesamlphp-internal-utils": "~v2.0.0"
     },
     "repositories": {
             "cirrus-cirrusinternal": {
