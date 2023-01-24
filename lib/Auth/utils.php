@@ -1,4 +1,10 @@
 <?php
+
+use CirrusIdentity\SSP\Service\Cache\CacheManager;
+use CirrusIdentity\SSP\Utils\ServiceLocatorUtil;
+use SimpleSAML\Logger;
+use Symfony\Contracts\Cache\ItemInterface;
+
 /**
  * The functions, which are needed in more than one class, are listed below.
  * @author Micha Preußer <micha.preusser@netknights.it>
@@ -85,20 +91,33 @@ class sspmod_privacyidea_Auth_utils {
 	 * This is the authorization header, which is needed for some API requests.
 	 */
 	public function fetchAuthToken($serverconfig) {
-		$params = array(
-			"username" => $serverconfig['serviceAccount'],
-			"password" => $serverconfig['servicePass'],
-		);
 
-		$body = self::curl($params, null, $serverconfig, "/auth", "POST");
-		try {
-			$result = $body->result;
-			$value = $result->value;
-			$token = $value->token;
-		} catch (Exception $e) {
-			throw new SimpleSAML_Error_BadRequest("privacyIDEA: We were not able to read the response from the PI server");
-		}
-		return $token;
+        /** @var CacheManager $cacheManager */
+        $cacheManager = ServiceLocatorUtil::getDefaultServiceLocator()->get(CacheManager::class);
+        // If the format of the data getting stored in the cache changes, then change the cache name to avoid
+        // conflicts with other instances
+        $cache = $cacheManager->getCache('privacy-idea-c1');
+        return $cache->get(
+            'piApiTokenSsp',
+            function (ItemInterface $item) use ($serverconfig) {
+                Logger::debug('Cache miss for privacy idea API token. Getting token');
+                $params = array(
+                    "username" => $serverconfig['serviceAccount'],
+                    "password" => $serverconfig['servicePass'],
+                );
+
+                $body = self::curl($params, null, $serverconfig, "/auth", "POST");
+                try {
+                    $result = $body->result;
+                    $value = $result->value;
+                    $token = $value->token;
+                } catch (Exception $e) {
+                    throw new SimpleSAML_Error_BadRequest("privacyIDEA: We were not able to read the response from the PI server");
+                }
+                return $token;
+            }
+        );
+
 	}
 
 	/**

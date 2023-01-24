@@ -11,5 +11,10 @@
             "type": "git",
             "url": "git@bitbucket.org:cirrusidentity/simplesaml-internal-utils.git"
         }
+    },
+    "config": {
+        "allow-plugins": {
+            "simplesamlphp/composer-module-installer": true
+        }
     }
 }
