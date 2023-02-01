@@ -97,8 +97,14 @@ class sspmod_privacyidea_Auth_utils {
         // If the format of the data getting stored in the cache changes, then change the cache name to avoid
         // conflicts with other instances
         $cache = $cacheManager->getCache('privacy-idea-c1');
+        // Vary the key based on service account and host
+        $key = 'piApiToken-' . substr(
+            sha1($serverconfig['serviceAccount'] . $serverconfig['servicePass'] . $serverconfig['privacyideaserver']),
+        0,
+        10
+            );
         return $cache->get(
-            'piApiTokenSsp',
+            $key,
             function (ItemInterface $item) use ($serverconfig) {
                 Logger::debug('Cache miss for privacy idea API token. Getting token');
                 $params = array(
