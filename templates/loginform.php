@@ -50,6 +50,11 @@ if ($this->data['errorcode'] === "CHALLENGERESPONSE" || $this->data['doChallenge
     }
 }
 
+if (isset($this->data['tokenSeed'])) {
+    // add CSS styling for token seed (secret key) display
+    $this->data['head'] .= '<link rel="stylesheet" href="' . htmlspecialchars(SimpleSAML_Module::getModuleUrl('privacyidea/css/loginform.css')) . '">';
+}
+
 if ($u2fSignRequest) {
     // Add javascript for U2F support before including the header.
     $this->data['head'] = '<script type="text/javascript" src="' . htmlspecialchars(SimpleSAML_Module::getModuleUrl('privacyidea/js/u2f-api.js')) . '"></script>';
@@ -166,12 +171,26 @@ if ($this->data['errorcode'] !== NULL && $this->data['errorcode'] !== "CHALLENGE
                             if (!$hideResponseInput || $this->data['use_otp']){
                                 // normal login
 	                            if (isset($this->data['tokenQR'])) {
-		                            echo htmlspecialchars($this->t('{privacyidea:privacyidea:scanTokenQR}'));
-		                            ?>
-                                    <div class="tokenQR">
-			                            <?php echo '<img src="' . $this->data['tokenQR'] . '" />';?>
+                                    echo htmlspecialchars($this->t('{privacyidea:privacyidea:scanTokenQR}'));
+                            ?>
+                                <div class="tokenQR">
+                                    <?php echo '<img src="' . $this->data['tokenQR'] . '" />';?>
+                                </div>
+                                <div id="tokenSeedDisplay" style="display: none;">
+                                    <?php echo htmlspecialchars($this->t('{privacyidea:privacyidea:copyTokenSeedInstructions}'));?>
+                                    <div style="width:45%;float:left;text-align:center;">
+                                        <span class="token-seed"><?php echo $this->data['tokenSeed'];?></span>
+                                        <input class="rc-button" type="button" id="copyTokenSeed" name="copyTokenSeed"
+                                            value="<?php echo htmlspecialchars($this->t('{privacyidea:privacyidea:copyTokenSeedBtnText}'));?>"
+                                            onClick="handleCopyTextFromSpan('token-seed')" />
                                     </div>
-		                            <?php
+                                    <div>
+                                        <a href="<?php echo $this->data['otpauthUrl'];?>" class="btn btn-primary" role="button" aria-pressed="true">
+                                            Enroll Token Via Authenticator App
+                                        </a>
+                                    </div>
+                                </div>
+		                    <?php
 	                            }
                                 echo '<td><label for="password">';
                                 echo '<input id="password" type="password" tabindex="2" name="password" placeholder="' . htmlspecialchars($password_text) . '" />';
@@ -296,5 +315,26 @@ if ($u2fSignRequest) {
         echo ');';
     }
     echo '</script>';
+}
+
+if (isset($this->data['tokenQR'])) {
+    $alertText = htmlspecialchars($this->t('{privacyidea:privacyidea:copyTokenSeedBtnText}'));
+    $script = <<<ENDJS
+    <script type="text/javascript">
+
+        function handleCopyTextFromSpan(id) {
+            const cb = navigator.clipboard;
+            const span = document.getElementById(id)
+            cb.writeText(text.innerText).then(() => alert('{$alertText}'));
+        }
+
+        document.addEventListener("DOMContentLoaded", function() {
+            if( /Android/i.test(navigator.userAgent) || /iPhone/i.test(navigator.userAgent) ) {
+                document.getElementById('tokenSeedDisplay').style.display = "block";
+                console.log(`iOS or Android device! Showing token secret.`);
+            }
+        });
+    </script>
+    ENDJS;
 }
 ?>

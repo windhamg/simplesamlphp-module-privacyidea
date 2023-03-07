@@ -1,0 +1,8 @@
+.token-seed {
+    background: #FFE166;
+    border: 1px dashed rgba(0,0,0,0.1);
+    font-family: monospace;
+    font-size: 24px;
+    color: #000000;
+    padding: 12px;
+}

@@ -29,6 +29,15 @@
 	"scanTokenQR": {
 		"en": "Scan this QR code with an app like Google Authenticator or privacyIDEA Authenticator and enter the displayed code below."
 	},
+	"copyTokenSeedInstructions": {
+		"en": "Please copy the secret key below, enter it into your authenticator app (for example, Google Authenticator or Microsoft Authenticator), then enter the displayed code below."
+	},
+	"copyTokenSeedBtnText": {
+		"en": "COPY"
+	},
+	"copyTokenSeedAlertText": {
+		"en": "Secret key copied to clipboard."
+	},
 	"chal_resp_message": {
 		"en": "Please confirm with one of these tokens: "
 	},

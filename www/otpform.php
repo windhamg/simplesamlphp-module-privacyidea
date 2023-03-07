@@ -101,8 +101,12 @@
 		}
 		if (isset($state['privacyidea:tokenEnrollment']['tokenQR'])) {
 			$tpl->data['tokenQR'] = $state['privacyidea:tokenEnrollment']['tokenQR'];
+			$tpl->data['tokenSeed'] = $state['privacyidea:tokenEnrollment']['tokenSeed'];
+			$tpl->data['otpauthUrl'] = $state['privacyidea:tokenEnrollment']['otpauthUrl'];
 		} else {
 			$tpl->data['tokenQR'] = null;
+			$tpl->data['tokenSeed'] = null;
+			$tpl->data['otpauthUrl'] = null;
 		}
 	} elseif ($state['privacyidea:privacyidea:authenticationMethod'] === "authsource") {
 

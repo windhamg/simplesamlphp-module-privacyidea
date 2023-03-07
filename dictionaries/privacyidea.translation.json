@@ -37,6 +37,15 @@
 	"scanTokenQR": {
 		"de": "Scannen Sie den QR-Code mit einer App, wie dem Google Authenticator oder privacyIDEA Authenticator und geben Sie den angezeigten Code unten ein."
 	},
+	"copyTokenSeedInstructions": {
+		"de": "Bitte kopieren Sie den folgenden geheimen Schlüssel, geben Sie ihn in Ihre Authenticator -App ein (z. B. Google Authenticator oder Microsoft Authenticator) und geben Sie dann den folgenden angezeigten Code ein."
+	},
+	"copyTokenSeedBtnText": {
+		"de": "KOPIEREN"
+	},
+	"copyTokenSeedAlertText": {
+		"de": "Geheimer Schlüssel in die Zwischenablage kopiert."
+	},
 	"chal_resp_message": {
 		"de": "Bitte bestätigen Sie mit einem der folgenden Token: "
 	},

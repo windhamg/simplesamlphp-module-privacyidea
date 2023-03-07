@@ -82,7 +82,11 @@ class sspmod_privacyidea_Auth_Process_tokenEnrollment extends SimpleSAML_Auth_Pr
 						$detail = $body->detail;
 						$googleurl = $detail->googleurl;
 						$img = $googleurl->img;
+						$otpauthurl = $googleurl->value;
+						$tokenseed = $detail->otpkey->value_b32;
 						$state['privacyidea:tokenEnrollment']['tokenQR'] = $img;
+						$state['privacyidea:tokenEnrollment']['tokenSeed'] = $tokenseed;
+						$state['privacyidea:tokenEnrollment']['otpauthUrl'] = $otpauthurl;
 					} catch (Exception $e) {
 						throw new SimpleSAML_Error_BadRequest("privacyIDEA: We were not able to read the response from the PI server");
 					}
